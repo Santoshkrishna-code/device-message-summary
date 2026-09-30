@@ -227,7 +227,7 @@ The input file is read and processed when `/summary` is requested rather than be
 
 ## Time Spent
 
-Actual time spent: TBD
+Actual time spent: Approximately 50 minutes.
 
 ## Unfinished Work
 
@@ -255,7 +255,9 @@ The repository is organized into distinct modules:
 - `app/processor.py`: Pure business logic for parsing, validating, deduplicating, and aggregating.
 - `app/main.py`: FastAPI server exposing `GET /summary`.
 - `data/sample.jsonl`: 5-line sample file with duplicates and a malformed record.
-- `tests/`: 16 comprehensive unit and integration tests.
+- `data/edge_cases.jsonl`: Schema and edge case validation records.
+- `data/larger_sample.jsonl`: 56-line realistic synthetic dataset across devices D01–D10.
+- `tests/`: 18 comprehensive unit and integration tests.
 
 ### 2. Starting the Server
 Start Uvicorn from the project root:
@@ -309,10 +311,10 @@ DATA_FILE_PATH=data/non_existent.jsonl curl -i http://127.0.0.1:8000/summary
 ```
 
 ### 6. Running Tests
-Run all 16 tests via pytest:
+Run all 18 tests via pytest:
 ```bash
 pytest -v
-# ======================== 16 passed in 0.46s =========================
+# ======================== 18 passed in 0.22s =========================
 ```
 
 ### 7. Design Choice
