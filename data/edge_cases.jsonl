@@ -1,0 +1,10 @@
+{"device_id":"D03","sequence":0,"status":"ok"}
+{"device_id":"D03","sequence":5,"status":"error"}
+{"device_id":"D03","sequence":2,"status":"ok"}
+{"device_id":"D04","sequence":10,"status":"ok"}
+{"device_id":"D04","sequence":10,"status":"error"}
+{"device_id":"","sequence":1,"status":"ok"}
+{"device_id":"D05","sequence":-1,"status":"ok"}
+{"device_id":"D06","sequence":true,"status":"ok"}
+{"device_id":"D07","sequence":1,"status":"unknown"}
+{"device_id":"D08","sequence":1,"status":"ok"

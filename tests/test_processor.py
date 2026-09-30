@@ -238,3 +238,66 @@ def test_file_not_found():
     """Verify FileNotFoundError is raised when file does not exist."""
     with pytest.raises(FileNotFoundError):
         process_file("data/non_existent_file.jsonl")
+
+
+def test_edge_cases_file():
+    """Verify data/edge_cases.jsonl with edge cases."""
+    result = process_file("data/edge_cases.jsonl")
+
+    assert result.accepted == 4
+    assert result.duplicates == 1
+    assert len(result.errors) == 5
+
+    assert result.errors == [
+        ProcessingError(line=6, code="INVALID_RECORD"),
+        ProcessingError(line=7, code="INVALID_RECORD"),
+        ProcessingError(line=8, code="INVALID_RECORD"),
+        ProcessingError(line=9, code="INVALID_RECORD"),
+        ProcessingError(line=10, code="BAD_JSON"),
+    ]
+
+    expected_devices = [
+        DeviceSummary(
+            device_id="D03",
+            ok=2,
+            error=1,
+            last_sequence=5,
+            last_status="error",
+        ),
+        DeviceSummary(
+            device_id="D04",
+            ok=1,
+            error=0,
+            last_sequence=10,
+            last_status="ok",
+        ),
+    ]
+    assert result.devices == expected_devices
+
+
+def test_larger_sample_file():
+    """Verify data/larger_sample.jsonl with multi-device realistic dataset."""
+    result = process_file("data/larger_sample.jsonl")
+
+    assert result.accepted == 47
+    assert result.duplicates == 5
+    assert len(result.errors) == 4
+    assert len(result.devices) == 10
+
+    # Devices must be strictly sorted by device_id
+    device_ids = [d.device_id for d in result.devices]
+    assert device_ids == sorted(device_ids)
+    assert device_ids == [f"D{i:02d}" for i in range(1, 11)]
+
+    # Validate specific device metrics
+    d01 = next(d for d in result.devices if d.device_id == "D01")
+    assert d01.ok == 3
+    assert d01.error == 2
+    assert d01.last_sequence == 15
+    assert d01.last_status == "ok"
+
+    d02 = next(d for d in result.devices if d.device_id == "D02")
+    assert d02.ok == 4
+    assert d02.error == 1
+    assert d02.last_sequence == 4
+    assert d02.last_status == "error"

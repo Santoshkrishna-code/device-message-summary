@@ -24,7 +24,9 @@ device-message-summary/
 │   ├── processor.py
 │   └── models.py
 ├── data/
-│   └── sample.jsonl
+│   ├── sample.jsonl          # Required assignment sample (5 lines)
+│   ├── edge_cases.jsonl      # Additional validation cases (out-of-order, duplicates, schema errors)
+│   └── larger_sample.jsonl   # Realistic multi-device synthetic dataset (D01–D10)
 ├── tests/
 │   ├── test_processor.py
 │   └── test_api.py
@@ -37,7 +39,9 @@ device-message-summary/
 - `app/models.py` — internal dataclasses (`ProcessingError`, `DeviceSummary`, `SummaryResponse`)
 - `app/processor.py` — JSONL parsing, validation, deduplication, and aggregation logic
 - `app/main.py` — FastAPI application and `GET /summary` endpoint
-- `data/sample.jsonl` — sample JSON Lines input file
+- `data/sample.jsonl` — exact required 5-line sample input file
+- `data/edge_cases.jsonl` — additional test dataset covering schema edge cases
+- `data/larger_sample.jsonl` — synthetic multi-device dataset for volume/sorting validation
 - `tests/` — automated unit and API integration tests
 
 ## Prerequisites
@@ -194,10 +198,11 @@ pytest -v
 ```
 
 The test suite covers:
-- The required sample file with expected counts, errors, and device summaries.
+- The required 5-line sample file with expected counts, errors, and device summaries.
 - Out-of-order sequence processing verifying that latest status tracks the highest sequence number.
 - Empty input handling.
 - Edge cases: malformed JSON lines, blank lines, non-object JSON, missing and extra fields, invalid device IDs, boolean/float/negative sequences, invalid statuses, duplicate records with different statuses, and invalid records preceding valid records.
+- Processing verification against `data/edge_cases.jsonl` and the multi-device synthetic `data/larger_sample.jsonl`.
 - API tests verifying HTTP 200 response structure and HTTP 500 file-read failure handling.
 
 ## Design Choice
